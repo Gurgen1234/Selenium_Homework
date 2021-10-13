@@ -1,11 +1,14 @@
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import pages.AbstractPage;
-import pages.LoginPage;
+import pages.*;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class HelpdeskUITest {
@@ -27,18 +30,41 @@ public class HelpdeskUITest {
     }
 
     @Test
-    public void createTicketTest() {
+    public void createTicketTest() throws IOException {
         driver.get(System.getProperty("site.url"));
-
-        // ...
-
-        // todo: чтение данных учетной записи пользователя из user.properties в System.properties
+        driver.manage().timeouts().implicitlyWait(1,TimeUnit.SECONDS);
+        MainPage mainPage = new MainPage();
+        mainPage.newTicketClick();
+        String selectQueueText = "Django Helpdesk";
+        String sendSummaryOfTheProblemText = "Ticket - " + UUID.randomUUID().toString();
+        String selectPriorityText = "2. High";
+        String sendDescriptionText = "Готово";
+        String sendDateText = "2021-10-30 00:00:00";
+        String sendEMailText = "abc@gmail.com";
+        CreateTicketPage createTicketPage = new CreateTicketPage();
+        createTicketPage.selectQueue(selectQueueText);
+        createTicketPage.sendSummaryOfTheProblem(sendSummaryOfTheProblemText);
+        createTicketPage.selectPriority(selectPriorityText);
+        createTicketPage.sendDescription(sendDescriptionText);
+        createTicketPage.sendDate(sendDateText);
+        createTicketPage.sendEMail(sendEMailText);
+        createTicketPage.clickSubmitTicket();
+        mainPage.LogInClick();
+        System.getProperties().load(ClassLoader.getSystemResourceAsStream("user.properties"));
         LoginPage loginPage = new LoginPage();
         loginPage.login(System.getProperty("user"), System.getProperty("password"));
-
-        // ...
-
-        //Закрываем текущее окно браузера
+        loginPage.clickLogIn();
+        TIcketsPage ticketsPage = new TIcketsPage();
+        ticketsPage.selectFilter();
+        ticketsPage.selectQueueFilter(selectQueueText);
+        ticketsPage.sendKeyWord(sendSummaryOfTheProblemText);
+        ticketsPage.applyBtnClick();
+        String foundItem = ticketsPage.startExamination();
+        Assert.assertEquals(sendSummaryOfTheProblemText, foundItem);
         driver.close();
     }
+    //@Test
+    //public void createTicketTest() throws IOException {
+    //    driver.get(System.getProperty("site.url"));
+    //}
 }
