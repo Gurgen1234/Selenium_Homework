@@ -2,12 +2,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import pages.*;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -17,15 +15,10 @@ public class HelpdeskUITest {
 
     @Before
     public void setup() throws IOException {
-        // Читаем конфигурационный файл в System.properties
         System.getProperties().load(ClassLoader.getSystemResourceAsStream("config.properties"));
-        // Создание экземпляра драйвера
         driver = new ChromeDriver();
-        // Устанавливаем размер окна браузера, как максимально возможный
         driver.manage().window().maximize();
-        // Установим время ожидания для поиска элементов
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        // Установить созданный драйвер для поиска в веб-страницах
         AbstractPage.setDriver(driver);
     }
 
@@ -54,7 +47,7 @@ public class HelpdeskUITest {
         LoginPage loginPage = new LoginPage();
         loginPage.login(System.getProperty("user"), System.getProperty("password"));
         loginPage.clickLogIn();
-        TIcketsPage ticketsPage = new TIcketsPage();
+        TicketsPage ticketsPage = new TicketsPage();
         ticketsPage.selectFilter();
         ticketsPage.selectQueueFilter(selectQueueText);
         ticketsPage.sendKeyWord(sendSummaryOfTheProblemText);
@@ -63,8 +56,4 @@ public class HelpdeskUITest {
         Assert.assertEquals(sendSummaryOfTheProblemText, foundItem);
         driver.close();
     }
-    //@Test
-    //public void createTicketTest() throws IOException {
-    //    driver.get(System.getProperty("site.url"));
-    //}
 }

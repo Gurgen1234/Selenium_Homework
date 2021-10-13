@@ -11,7 +11,6 @@ public class LoginPage extends AbstractPage {
         logInBtn = driver.findElement(By.cssSelector("[value=\"Login\"]"));
         logInBtn.click();
     }
-    // todo: остальные элементы страницы
 
     public void login(String user, String password) {
         driver.findElement(By.cssSelector("[name=\"username\"]")).sendKeys(user);
